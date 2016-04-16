@@ -45,4 +45,72 @@ $('document').ready(function () {
             document.execCommand($(this).attr('id'));
         }
     });
+
+
+    document.querySelector('#load_file').addEventListener('change', function () {
+
+        var files = document.getElementById('load_file').files;
+
+        if (!files.length) {
+            alert('Please select a file!');
+            return;
+        }
+
+        var file = files[0];
+
+        console.log(file.type);
+
+        var reader = new FileReader();
+
+        reader.onloadend = function (evt) {
+            document.getElementById('text-zone-1').textContent = evt.target.result;
+        };
+
+        reader.readAsBinaryString(file);
+
+    }, false);
+
+
+    var handleDrag = function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+    };
+    var handleDrop = function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        x = e.clientX;
+        y = e.clientY;
+        var file = e.dataTransfer.files[0];
+        if (file.type.match('image.*')) {
+            var reader = new FileReader();
+            reader.onload = (function (theFile) {
+                var dataURI = theFile.target.result;
+                var img = document.createElement("img");
+                img.src = dataURI;
+                img.style.maxWidth = document.getElementById('text-zone-1').offsetWidth - 220 + 'px';
+                img.style.resize = 'both';
+                if (document.caretPositionFromPoint) {
+                    var pos = document.caretPositionFromPoint(x, y);
+                    range = document.createRange();
+                    range.setStart(pos.offsetNode, pos.offset);
+                    range.collapse();
+                    range.insertNode(img);
+                }
+                else if (document.caretRangeFromPoint) {
+                    range = document.caretRangeFromPoint(x, y);
+                    range.insertNode(img);
+                }
+                else {
+                    console.log('could not find carat');
+                }
+
+
+            });
+            reader.readAsDataURL(file);
+        }
+    };
+
+    var dropZone = document.getElementById('text-zone-1');
+    dropZone.addEventListener('dragover', handleDrag, false);
+    dropZone.addEventListener('drop', handleDrop, false);
 });
