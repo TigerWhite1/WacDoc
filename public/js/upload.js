@@ -14,6 +14,7 @@ $(document).ready(function(){
         var reader = new FileReader();
 
         reader.onload = function(event) {
+            the_url = event.target.result;
             $('#upload').append("<div class='name'>"+file.name+"</div>");
         };
 
@@ -21,5 +22,4 @@ $(document).ready(function(){
 
         reader.readAsDataURL(file);
     }
-    
 })

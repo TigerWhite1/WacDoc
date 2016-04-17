@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <title>New doc</title>
@@ -7,7 +7,27 @@
     <script src="js/jquery-2.2.3.js"></script>
     <script src="js/file_saver.js"></script>
     <script src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="js/jspdf.js"></script>
     <script src="js/script.js"></script>
+    <script type="text/javascript" src="js/html2pdf.js"></script>
+    <script type="text/javascript" src="js/jsPDF-master/dist/jspdf.debug.js"></script>
+    <script type="text/javascript" src="js/jsPDF-master/plugins/standard_fonts_metrics.js"></script>
+    <script type="text/javascript" src="js/jsPDF-master/plugins/split_text_to_size.js"></script>
+    <script type="text/javascript" src="js/jsPDF-master/plugins/from_html.js"></script>
+    <script type="text/javascript" src="js/jsPDF-master/plugins/acroform.js"></script>
+    <script type="text/javascript" src="js/jsPDF-master/plugins/addhtml.js"></script>
+    <script type="text/javascript" src="js/jsPDF-master/plugins/addimage.js"></script>
+    <script type="text/javascript" src="js/jsPDF-master/plugins/annotations.js"></script>
+    <script type="text/javascript" src="js/jsPDF-master/plugins/autoprint.js"></script>
+    <script type="text/javascript" src="js/jsPDF-master/plugins/canvas.js"></script>
+    <script type="text/javascript" src="js/jsPDF-master/plugins/cell.js"></script>
+    <script type="text/javascript" src="js/jsPDF-master/plugins/context2d.js"></script>
+    <script type="text/javascript" src="js/jsPDF-master/plugins/javascript.js"></script>
+    <script type="text/javascript" src="js/jsPDF-master/plugins/outline.js"></script>
+    <script type="text/javascript" src="js/jsPDF-master/plugins/png_support.js"></script>
+    <script type="text/javascript" src="js/jsPDF-master/plugins/prevent_scale_to_fit.js"></script>
+    <script type="text/javascript" src="js/jsPDF-master/plugins/svg.js"></script>
+    <script type="text/javascript" src="js/jsPDF-master/plugins/total_pages.js"></script>
     <link rel="stylesheet" href="css/css.css">
 </head>
 <body>
@@ -43,39 +63,26 @@
                     <li>
                         <button class="btn btn-default" id="link"><i class="glyphicon glyphicon-link"></i></button>
                     </li>
+                    <li>
+                        <input type="file" id="load_file" class="btn btn-default">
+                    </li>
+                    <li>
+                        <button id="save" class="btn btn-default">Save To</button>
+                    </li>
+                    <li>
+                        <select id="extension" class="btn btn-default">
+                            <option value=".mywac">mywac</option>
+                            <option value=".html">html</option>
+                            <option value=".txt">texte</option>
+                        </select>
+                    </li>
+                    <li>
+                        <button class="btn btn-default" id="export-PDF">Exporter au format PDF</button>
+                    </li>
                 </ul>
             </div>
         </div>
     </nav>
-
-    <input type="file" id="load_file">
-
-
-
-
-
-
-
-
-
-    
-
-    <button id="save">Save Text to File</button>
-    <select id="extension">
-        <option value=".mywac">mywac</option>
-        <option value=".html">html</option>
-    </select>
-
-
-
-
-
-
-
-
-
-
-
 
 
     <div class="container">

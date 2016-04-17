@@ -47,130 +47,179 @@ $('document').ready(function () {
         }
     });
 
-    var socket = io.connect('http://localhost:1337');
+ //    var socket = io.connect('http://localhost:1337');
 
-    $('#color').on('change', function () {
-        var dInput =  $('#text-zone-1').html();
-        socket.emit('message', dInput);
-    });
+ //    $('#color').on('change', function () {
+ //        var dInput =  $('#text-zone-1').html();
+ //        socket.emit('message', dInput);
+ //    });
 
-    $('#text-zone-1').keyup(function() {
-        var dInput =  $('#text-zone-1').html();
-        socket.emit('message', dInput);
-    });
+ //    $('#text-zone-1').keyup(function() {
+ //        var dInput =  $('#text-zone-1').html();
+ //        socket.emit('message', dInput);
+ //    });
 
-    $('.btn').click(function () {
-       var dInput =  $('#text-zone-1').html();
-       socket.emit('message', dInput); 
-   })
+ //    $('.btn').click(function () {
+ //     var dInput =  $('#text-zone-1').html();
+ //     socket.emit('message', dInput); 
+ // })
 
-    socket.on('message',function(message){
-        $('#text-zone-1').html(message);
-    })
+ //    socket.on('message',function(message){
+ //        $('#text-zone-1').html(message);
+ //    })
 
-    
 
-    document.querySelector('#load_file').addEventListener('change', function () {
+ document.querySelector('#load_file').addEventListener('change', function () {
 
-        var files = document.getElementById('load_file').files;
+    var files = document.getElementById('load_file').files;
 
-        if (!files.length) {
-            alert('Please select a file!');
-            return;
-        }
+    if (!files.length) {
+        alert('Please select a file!');
+        return;
+    }
 
-        var file = files[0];
+    var file = files[0];
 
-        var file_name = file.name;
+    var file_name = file.name;
 
-        var file_extension = file_name.split('.');
+    var file_extension = file_name.split('.');
 
-        if(file_extension[1] == "mywac")
+    if(file_extension[1] == "mywac")
+    {
+        if(file.type == "")
         {
-            if(file.type == "")
-            {
-                var reader = new FileReader();
+            var reader = new FileReader();
 
-                reader.onloadend = function (evt) {
-                    document.getElementById('text-zone-1').innerHTML = evt.target.result;
-                    var dInput =  $('#text-zone-1').html();
-                    socket.emit('message', dInput);
-                };
+            reader.onloadend = function (evt) {
+                document.getElementById('text-zone-1').innerHTML = evt.target.result;
+                var dInput =  $('#text-zone-1').html();
+                socket.emit('message', dInput);
+            };
 
-                reader.readAsBinaryString(file);
-            }
-            else
-            {
-                alert("Ce n'est pas un fichier [.mywac]");
-            }
+            reader.readAsBinaryString(file);
         }
         else
         {
             alert("Ce n'est pas un fichier [.mywac]");
         }
-
-    }, false);
-
-
-    $('#save').click(function(){
-        saveTextAsFile();        
-    })
-
-    function saveTextAsFile()
+    }
+    else
     {
-        var textToWrite = $("#text-zone-1").html();
-        var blob = new Blob([textToWrite], {type:'text/plain'});
-        console.log(textToWrite);
-        var fileNameToSaveAs = 'mennad'+ $('#extension').val();
-
-        saveAs(blob,fileNameToSaveAs);
+        alert("Ce n'est pas un fichier [.mywac]");
     }
 
-    var handleDrag = function (e) {
-        e.stopPropagation();
-        e.preventDefault();
-    };
-    var handleDrop = function (e) {
-        e.stopPropagation();
-        e.preventDefault();
-        x = e.clientX;
-        y = e.clientY;
-        var file = e.dataTransfer.files[0];
-        if (file.type.match('image.*')) {
-            var reader = new FileReader();
-            reader.onload = (function (theFile) {
-                var dataURI = theFile.target.result;
-                var img = document.createElement("img");
-                img.src = dataURI;
-                img.style.maxWidth = document.getElementById('text-zone-1').offsetWidth - 220 + 'px';
-                img.style.resize = 'both';
-                if (document.caretPositionFromPoint) {
-                    var pos = document.caretPositionFromPoint(x, y);
-                    range = document.createRange();
-                    range.setStart(pos.offsetNode, pos.offset);
-                    range.collapse();
-                    range.insertNode(img);
-                    var dInput =  $('#text-zone-1').html();
-                    socket.emit('message', dInput);
-                }
-                else if (document.caretRangeFromPoint) {
-                    range = document.caretRangeFromPoint(x, y);
-                    range.insertNode(img);
-                    var dInput =  $('#text-zone-1').html();
-                    socket.emit('message', dInput);
-                }
-                else {
-                    console.log('could not find carat');
-                }
+}, false);
+
+ $('#save').click(function(){
+    saveTextAsFile();        
+})
+
+ function saveTextAsFile()
+ {
+    var textToWrite = $("#text-zone-1").html();
+    var blob = new Blob([textToWrite], {type:'text/plain'});
+    var fileNameToSaveAs = 'mennad'+ $('#extension').val();
+
+    if($('#extension').val() == '.txt')
+    {
+        var value1 = ""; var value2 = "";
+
+        $("#text-zone-1").each(function(){
+            value1 = $(this).html();
+            value2 += "<br>" + ((value1 == "<br>") ? "" : value1);
+        })
+
+        var text = value2.replace(/<br[^>]*>/g, "\n").replace(/(<([^>]+)>)/ig, '');
+        saveAs(blob,fileNameToSaveAs);
+
+    }
+    else
+    {
+        saveAs(blob,fileNameToSaveAs);
+    }
+}
+
+var handleDrag = function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+};
+var handleDrop = function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+    x = e.clientX;
+    y = e.clientY;
+    var file = e.dataTransfer.files[0];
+    if (file.type.match('image.*')) {
+        var reader = new FileReader();
+        reader.onload = (function (theFile) {
+            var dataURI = theFile.target.result;
+            var img = document.createElement("img");
+            img.src = dataURI;
+            img.style.maxWidth = document.getElementById('text-zone-1').offsetWidth - 220 + 'px';
+            img.style.resize = 'both';
+            if (document.caretPositionFromPoint) {
+                var pos = document.caretPositionFromPoint(x, y);
+                range = document.createRange();
+                range.setStart(pos.offsetNode, pos.offset);
+                range.collapse();
+                range.insertNode(img);
+                var dInput =  $('#text-zone-1').html();
+                socket.emit('message', dInput);
+            }
+            else if (document.caretRangeFromPoint) {
+                range = document.caretRangeFromPoint(x, y);
+                range.insertNode(img);
+                var dInput =  $('#text-zone-1').html();
+                socket.emit('message', dInput);
+            }
+            else {
+                console.log('could not find carat');
+            }
 
 
-            });
-            reader.readAsDataURL(file);
+        });
+        reader.readAsDataURL(file);
+    }
+};
+
+var dropZone = document.getElementById('text-zone-1');
+dropZone.addEventListener('dragover', handleDrag, false);
+dropZone.addEventListener('drop', handleDrop, false);
+
+var actualPage = $('#text-zone-1');
+
+function exportFromHTML() {
+    var pdf = new jsPDF('p', 'pt', 'letter');
+
+    source = actualPage[0];
+
+    specialElementHandlers = {
+        '#bypassme': function (element, renderer) {
+            return true
         }
     };
+    margins = {
+        top: 80,
+        bottom: 60,
+        left: 40,
+        width: 522
+    };
 
-    var dropZone = document.getElementById('text-zone-1');
-    dropZone.addEventListener('dragover', handleDrag, false);
-    dropZone.addEventListener('drop', handleDrop, false);
+    pdf.fromHTML(
+            source, // HTML string or DOM elem ref.
+            margins.left, // x coord
+            margins.top, { // y coord
+                'width': margins.width, // max width of content on PDF
+                'elementHandlers': specialElementHandlers
+            },
+
+            function (dispose) {
+                pdf.save('Test.pdf');
+            }, margins);
+}
+
+$('#export-PDF').on('click', function () {
+    exportFromHTML();
+});
 
 });
