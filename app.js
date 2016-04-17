@@ -1,50 +1,113 @@
-// var socket = require('socket.io');
-// var fs = require('fs');
-
+// vendor libraries
 var express = require('express');
-var app = express();
+var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
+var bcrypt = require('bcrypt-nodejs');
+var ejs = require('ejs');
 var path = require('path');
-var mysql = require('mysql');
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+var socket = require('socket.io');
+var fs = require('fs');
 
-var mysql = mysql.createConnection({
-	host     : "localhost",
-	user     : "root",
-	password : "",
-	database : "wacdoc"
+
+// custom libraries
+// routes
+var route = require('./route');
+// model
+var Model = require('./model');
+
+var app = express();
+app.use(express.static(__dirname + '/public'));
+
+fs.realpath(__dirname+"/savefile", function(err, path) {
+   if (err) {
+      console.log(err);
+      return;
+   }
+   console.log('Path is : ' + path);
+});
+fs.readdir(__dirname+"/savefile", function(err, files) {
+   if (err) return;
+   files.forEach(function(f) {
+      console.log('Files: ' + f);
+   });
 });
 
-var selectQuery = 'SELECT * FROM users';
-mysql.query(
-	selectQuery,
-	function select(error, results, fields) {
-		if (error) {
-			console.log(error);
-			mySqlClient.end();
-			return;
-		}
-		console.log(results[1].email)
-	});
+
+
+passport.use(new LocalStrategy(function(username, password, done) {
+   new Model.User({username: username}).fetch().then(function(data) {
+      var user = data;
+      if(user === null) {
+         return done(null, false, {message: 'Invalid username or password'});
+      } else {
+         user = data.toJSON();
+         if(!bcrypt.compareSync(password, user.password)) {
+            return done(null, false, {message: 'Invalid username or password'});
+         } else {
+            return done(null, user);
+         }
+      }
+   });
+}));
+
+passport.serializeUser(function(user, done) {
+ done(null, user.username);
+});
+
+passport.deserializeUser(function(username, done) {
+   new Model.User({username: username}).fetch().then(function(user) {
+      done(null, user);
+   });
+});
+
+app.set('port', process.env.PORT || 1337);
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+
+app.use(cookieParser());
+app.use(bodyParser());
+app.use(session({secret: 'secret strategic xxzzz code'}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+// GET
+app.get('/', route.index);
+
+// signin
+// GET
+app.get('/signin', route.signIn);
+// POST
+app.post('/signin', route.signInPost);
+
+app.get('/doc', route.doc);
+// POST
+// app.post('/doc', route.doc);
+// signup
+// GET
+app.get('/signup', route.signUp);
+// POST
+app.post('/signup', route.signUpPost);
+
+// logout
+// GET
+app.get('/signout', route.signOut);
 
 
 
-app.use(express.static(__dirname + '/public'));
-// app.use(express.static(__dirname + '/bower_components'));
-console.log(__dirname + '/public');
+/********************************/
 
+/********************************/
+// 404 not found
+app.use(route.notFound404);
 
-var server = app.listen(1337, function ()
-{
-	var host = server.address().address
-	var port = server.address().port
-	console.log("Example app listening at http://%s:%s", host, port)
-	// app.get('/', function (req, res) {
-	//    // res.send('ok');
-	//    res.sendFile('/paint.html');
-	// })
-})
+var server = app.listen(app.get('port'), function(err) {
+   if(err) throw err;
 
-app.get('/', function(req, res) {
-	res.sendFile(path.join(__dirname + '/index.html'));
+   var message = 'Server is running @ http://localhost:' + server.address().port;
+   console.log(message);
 });
 
 
@@ -52,47 +115,16 @@ var io = require('socket.io').listen(server);
 
 io.sockets.on('connection', function (socket)
 {
+   console.log("Une personne s'est connecter !");  
 
-	socket.on('register', function (username, email, password) {
+   socket.on('message', function (message, name) {
+      fs.writeFile('savefile/'+name, message, function (err) {
+         if (err) return console.log(err);
+      });
 
-		var selectQuery = 'SELECT * FROM users WHERE email = '+email;
-		mysql.query(
-			selectQuery,
-			function select(error, results, fields) {
-				if (error) {
-					console.log(error);
-					mySqlClient.end();
-					return;
-				}
-				if (results.length === 0) {
-
-					mysql.query('insert into users (username, email, password) values ("'+username+'","'+email+'","'+password+'")',
-						function selectCb(err, results, fields) {
-							if (err) throw err;
-							else
-								socket.emit('success', 'Inscription réussie.');
-
-
-						});
-
-				
-				} else {
-					socket.emit('error', 'Adresse email déjà utilisé.');
-
-				}
-			});
-
-
-
-	});
-
-	socket.on('text', function (text) {
-
-		console.log(text)
-		socket.broadcast.emit('text', text);
-
-	});
-	console.log('Un client est connecté !');
+      socket.broadcast.emit("message",message);
+   });   
 });
 
 server.listen(1337);
+
