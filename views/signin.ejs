@@ -1,30 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
-   <head>
-      <title><%= title %></title>
-   </head>
-   <body>
-      <h2>Sign In Form</h2>
-      <form method="post" action="/signin">
-		 
-         <% if(typeof(errorMessage) !== 'undefined') {%>
-            <span><%= errorMessage %></span>
-         <% } %>
-         <p>
-            <label for="username">username</label>
-            <input type="text" name="username" id="username"
-               placeholder="username" required="true"/>
-         </p>
-         <p>
-            <label for="password">password</label>
-            <input type="text" name="password" id="password"
-               placeholder="password" required="true"/>
-         </p>
-         <p>
-            <input type="submit" name="signin" id="signin" value="sign in"/> 
-            <a href="/signup" title="register">register</a>
-         </p>
-			
-      </form>
-   </body>
+<head>
+   <title><%= title %></title>
+   <link rel="stylesheet" href="css/bootstrap/css/bootstrap.css">
+   <script src="js/jquery-2.2.3.js"></script>
+</head>
+<body>
+
+   <nav class="navbar navbar-default" role="navigation">
+      <div class="container-fluid">
+         <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+               <span class="sr-only">Toggle navigation</span>
+               <span class="icon-bar"></span>
+               <span class="icon-bar"></span>
+               <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Wac Doc</a>
+         </div>
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+               <li class="active"><a href="/signin">Sign in</a></li>
+               <li><a href="signup">Register</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+               <li><a href="#">Link</a></li>
+            </ul>
+         </div>
+      </div>
+   </nav>
+   <h2>Sign In Form</h2>
+   <form method="post" action="/signin">
+
+      <% if(typeof(errorMessage) !== 'undefined') {%>
+      <span><%= errorMessage %></span>
+      <% } %>
+      <p> 
+         <div class="form-group">
+         <label for="username">username</label>
+         <input type="text" class="form-control" name="username" id="username"
+         placeholder="username" required="true"/>
+      </div>
+      </p>
+      <p>
+         <div class="form-group">
+         <label for="password">password</label>
+         <input type="text" class="form-control" name="password" id="password"
+         placeholder="password" required="true"/>
+      </div>
+      </p>
+      <p>
+      <input type="submit" name="signin" id="signin" class="btn btn-default" value="sign in"/> 
+      </p>
+
+   </form>
+</body>
 </html>

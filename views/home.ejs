@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>index</title>
+    <link rel="stylesheet" href="css/index.css">
+    <script src="js/jquery-2.2.3.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/upload.js"></script>
+    <!--  // <script src="js/script.js"></script> -->
+</head>
+<body>
+    <div id="nav"><h2>WacDoc</h2></div>
+
+
+    <form id="uploadForm"method="post" enctype="multipart/form-data" action="/api/photo" method="post">
+        <div id="onload">
+            <input id="file" type="file" name="userPhoto" multiple>
+        </div>
+        <div id="upload">
+        </div>
+        <input type="submit" value="Upload Image" name="submit">
+    </form>
+    <a href="/doc" class="add"><button id="add">+</button></a>
+<!--     <button id="add">+</button>
+ -->
+
+
+</body>
+</html>

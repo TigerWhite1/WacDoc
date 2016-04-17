@@ -68,6 +68,22 @@ var doc = function(req, res, next) {
    }
 };
 
+var home = function(req, res, next) {
+   if(req.isAuthenticated()) {
+      res.render('home', {title: 'home'});
+   } else {
+      res.redirect('/');
+   }
+};
+
+var allfile = function(req, res, next) {
+   if(req.isAuthenticated()) {
+      res.render('allfile', {title: 'allfile'});
+   } else {
+      res.redirect('/');
+   }
+};
+
 // sign up
 // POST
 var signUpPost = function(req, res, next) {
@@ -79,9 +95,7 @@ var signUpPost = function(req, res, next) {
       if(model) {
          res.render('signup', {title: 'signup', errorMessage: 'username already exists'});
       } else {
-         //****************************************************//
-         // MORE VALIDATION GOES HERE(E.G. PASSWORD VALIDATION)
-         //****************************************************//
+   
          var password = user.password;
          var hash = bcrypt.hashSync(password);
 
@@ -127,6 +141,10 @@ module.exports.signInPost = signInPost;
 module.exports.signUp = signUp;
 
 module.exports.doc = doc;
+
+module.exports.home = home;
+
+module.exports.allfile = allfile;
 // POST
 module.exports.signUpPost = signUpPost;
 

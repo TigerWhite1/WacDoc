@@ -10,7 +10,7 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var socket = require('socket.io');
 var fs = require('fs');
-
+var multer = require('multer');
 
 // custom libraries
 // routes
@@ -28,7 +28,7 @@ fs.realpath(__dirname+"/savefile", function(err, path) {
    }
    console.log('Path is : ' + path);
 });
-fs.readdir(__dirname+"/savefile", function(err, files) {
+fs.readdir(__dirname+"/public/savefile", function(err, files) {
    if (err) return;
    files.forEach(function(f) {
       console.log('Files: ' + f);
@@ -50,7 +50,7 @@ passport.use(new LocalStrategy(function(username, password, done) {
             return done(null, user);
          }
       }
-   });
+   });                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
 }));
 
 passport.serializeUser(function(user, done) {
@@ -62,6 +62,27 @@ passport.deserializeUser(function(username, done) {
       done(null, user);
    });
 });
+
+var storage =   multer.diskStorage({
+  destination: function (req, file, callback) {
+    callback(null, './public/savefile');
+ },
+ filename: function (req, file, callback) {
+    callback(null, Date.now() + '-' + file.originalname);
+ }
+});
+var upload = multer({ storage : storage}).single('userPhoto');
+
+
+app.post('/api/photo',function(req,res){
+ upload(req,res,function(err) {
+  if(err) {
+   return res.end("Error uploading file.");
+}
+res.redirect('/home');
+});
+});
+
 
 app.set('port', process.env.PORT || 1337);
 app.set('views', path.join(__dirname, 'views'));
@@ -83,6 +104,10 @@ app.get('/signin', route.signIn);
 app.post('/signin', route.signInPost);
 
 app.get('/doc', route.doc);
+
+app.get('/home', route.home);
+
+app.get('/allfile', route.allfile);
 // POST
 // app.post('/doc', route.doc);
 // signup
@@ -97,10 +122,6 @@ app.get('/signout', route.signOut);
 
 
 
-/********************************/
-
-/********************************/
-// 404 not found
 app.use(route.notFound404);
 
 var server = app.listen(app.get('port'), function(err) {
@@ -118,12 +139,30 @@ io.sockets.on('connection', function (socket)
    console.log("Une personne s'est connecter !");  
 
    socket.on('message', function (message, name) {
-      fs.writeFile('savefile/'+name, message, function (err) {
+      fs.writeFile('public/savefile/'+name, message, function (err) {
          if (err) return console.log(err);
       });
 
       socket.broadcast.emit("message",message);
-   });   
+   });
+
+   fs.readdir(__dirname+"/public/savefile", function(err, files) {
+      if (err) return;
+      files.forEach(function(f) {
+         console.log('Files: ' + f);
+      });
+      io.sockets.emit('allfile', files);
+   });
+
+   socket.on('file', function (file) {
+      console.log(file)
+
+      socket.emit("file",file);
+   });
+
+
+
+
 });
 
 server.listen(1337);
