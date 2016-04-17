@@ -1,13 +1,5 @@
 $('document').ready(function () {
-    $('#text-zone').focus();
-
-    $('#color').on('change', function () {
-        document.execCommand('ForeColor', false, $('#color').val());
-    });
-
-    $('.text-zone').on('keypress', function () {
-        document.execCommand('ForeColor', false, $('#color').val());
-    });
+    var actualPage = $('#text-zone-1');
 
     function link() {
         var linkURL = prompt('Enter an URL:', 'http://');
@@ -21,7 +13,6 @@ $('document').ready(function () {
         });
         link.off('mouseleave').on('mouseleave', function () {
             $('.text-zone').attr('contenteditable', 'true');
-            $(this).parent().focus();
         });
     }
 
@@ -87,7 +78,8 @@ $('document').ready(function () {
                 var dataURI = theFile.target.result;
                 var img = document.createElement("img");
                 img.src = dataURI;
-                img.style.maxWidth = document.getElementById('text-zone-1').offsetWidth - 220 + 'px';
+                img.style.maxWidth = document.getElementById('text-zone-1').offsetWidth + 'px';
+                img.style.maxHeight = document.getElementById('text-zone-1').offsetHeight + 'px';
                 img.style.resize = 'both';
                 if (document.caretPositionFromPoint) {
                     var pos = document.caretPositionFromPoint(x, y);
@@ -113,4 +105,44 @@ $('document').ready(function () {
     var dropZone = document.getElementById('text-zone-1');
     dropZone.addEventListener('dragover', handleDrag, false);
     dropZone.addEventListener('drop', handleDrop, false);
+
+
+    $('#test').click(function () {
+        console.log(actualPage.val());
+    });
+
+
+    function exportFromHTML() {
+        var pdf = new jsPDF('p', 'pt', 'letter');
+
+        source = actualPage[0];
+
+        specialElementHandlers = {
+            '#bypassme': function (element, renderer) {
+                return true
+            }
+        };
+        margins = {
+            top: 80,
+            bottom: 60,
+            left: 40,
+            width: document.getElementById('text-zone-1').offsetWidth
+        };
+
+        pdf.fromHTML(
+            source, // HTML string or DOM elem ref.
+            margins.left, // x coord
+            margins.top, { // y coord
+                'width': margins.width, // max width of content on PDF
+                'elementHandlers': specialElementHandlers
+            },
+
+            function (dispose) {
+                pdf.save('Test.pdf');
+            }, margins);
+    }
+
+    $('#export-PDF').off('click').on('click', function () {
+        exportFromHTML();
+    });
 });

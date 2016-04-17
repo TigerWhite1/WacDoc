@@ -1,13 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <title>New doc</title>
     <link rel="stylesheet" href="css/bootstrap/css/bootstrap.css">
-    <script src="js/jquery-2.2.3.js"></script>
-    <script src="js/script.js"></script>
     <link rel="stylesheet" href="css/css.css">
-
+    <script type="text/javascript" src="js/jquery-2.2.3.js"></script>
+    <script type="text/javascript" src="js/script.js"></script>
+    <script type="text/javascript" src="js/jspdf.js"></script>
+    <script type="text/javascript" src="js/FileSaver.js"></script>
+    <script type="text/javascript" src="js/html2pdf.js"></script>
+    <script type="text/javascript" src="js/jsPDF-master/plugins/standard_fonts_metrics.js"></script>
+    <script type="text/javascript" src="js/jsPDF-master/plugins/split_text_to_size.js"></script>
+    <script type="text/javascript" src="js/jsPDF-master/plugins/from_html.js"></script>
+    <script type="text/javascript" src="js/jsPDF-master/plugins/acroform.js"></script>
+    <script type="text/javascript" src="js/jsPDF-master/plugins/addhtml.js"></script>
+    <script type="text/javascript" src="js/jsPDF-master/plugins/addimage.js"></script>
+    <script type="text/javascript" src="js/jsPDF-master/plugins/annotations.js"></script>
+    <script type="text/javascript" src="js/jsPDF-master/plugins/autoprint.js"></script>
+    <script type="text/javascript" src="js/jsPDF-master/plugins/canvas.js"></script>
+    <script type="text/javascript" src="js/jsPDF-master/plugins/cell.js"></script>
+    <script type="text/javascript" src="js/jsPDF-master/plugins/context2d.js"></script>
+    <script type="text/javascript" src="js/jsPDF-master/plugins/javascript.js"></script>
+    <script type="text/javascript" src="js/jsPDF-master/plugins/outline.js"></script>
+    <script type="text/javascript" src="js/jsPDF-master/plugins/png_support.js"></script>
+    <script type="text/javascript" src="js/jsPDF-master/plugins/prevent_scale_to_fit.js"></script>
+    <script type="text/javascript" src="js/jsPDF-master/plugins/svg.js"></script>
+    <script type="text/javascript" src="js/jsPDF-master/plugins/total_pages.js"></script>
+    <script type="text/javascript" src="js/jsPDF-master/dist/jspdf.debug.js"></script>
 </head>
 <body>
 <nav class="navbar navbar-default" role="navigation">
@@ -47,10 +67,20 @@
     </div>
 </nav>
 
+
 <input type="file" id="load_file">
+<br/>
+
+<div class="btn-group btn-group-justified">
+    <a class="btn btn-default" href="#" id="test">Tester</a>
+</div>
+
+<button class="btn btn-default" id="export-PDF">Exporter au format PDF</button>
 
 <div class="container">
-    <div class="text-zone" contenteditable="true" id="text-zone-1">
+    <div class="contour">
+        <div class="text-zone" contenteditable="true" id="text-zone-1">
+        </div>
     </div>
 </div>
 </body>

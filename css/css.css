@@ -1,7 +1,12 @@
-.text-zone{
+.text-zone {
+    width: 700px;
+    height: 1100px;
+}
+
+.contour {
     width: 800px;
     height: 1200px;
-    padding: 100px;
     border: 1px solid black;
     margin: 150px;
+    padding: 50px 50px 50px 50px;
 }
