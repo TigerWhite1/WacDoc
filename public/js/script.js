@@ -47,28 +47,6 @@ $('document').ready(function () {
         }
     });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     var socket = io.connect('http://localhost:1337');
 
     $('#color').on('change', function () {
@@ -89,6 +67,8 @@ $('document').ready(function () {
     socket.on('message',function(message){
         $('#text-zone-1').html(message);
     })
+
+    
 
     document.querySelector('#load_file').addEventListener('change', function () {
 
@@ -146,43 +126,6 @@ $('document').ready(function () {
         saveAs(blob,fileNameToSaveAs);
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     var handleDrag = function (e) {
         e.stopPropagation();
         e.preventDefault();
@@ -229,7 +172,5 @@ $('document').ready(function () {
     var dropZone = document.getElementById('text-zone-1');
     dropZone.addEventListener('dragover', handleDrag, false);
     dropZone.addEventListener('drop', handleDrop, false);
+
 });
-
-
-
